@@ -5,7 +5,7 @@ import java.util.*;
 
 class Graph {
 
-    private static final String edgeEncoding = "#E";
+    private static final String edgeEncoding = "#E[0-9]*";
     private static final String vertexEncoding = "#V";
     private static final String ignoreNonDigitsRegex = "[^0-9]*";
 
@@ -67,7 +67,7 @@ class Graph {
     }
 
     private void readEdge() {
-        sc.skip(edgeEncoding);
+        sc.skip("#E");
         int edgeNum = sc.nextInt();
         int in = sc.nextInt();
         int out = sc.nextInt();

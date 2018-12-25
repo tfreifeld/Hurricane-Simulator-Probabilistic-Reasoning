@@ -98,7 +98,7 @@ public class Simulator {
             try {
                 System.out.println(message);
 
-                String input = sc.next();
+                String input = sc.nextLine();
                 String[] numbersStrings = input.split(" ");
 
                 result = new ArrayList<>();

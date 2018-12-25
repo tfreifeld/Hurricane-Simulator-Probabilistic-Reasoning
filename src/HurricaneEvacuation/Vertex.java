@@ -7,7 +7,7 @@ class Vertex {
     private int id;
     private boolean evacuees = false;
     private boolean flood = false;
-    private float floodProb;
+    private Probability floodProb;
     private HashMap<Integer, Edge> edges;
 
     Vertex(int id) {
@@ -22,11 +22,11 @@ class Vertex {
     }
 
     public float getFloodProb() {
-        return floodProb;
+        return floodProb.getProbability();
     }
 
     void setFloodProb(float floodProb) {
-        this.floodProb = floodProb;
+        this.floodProb = new Probability(floodProb);
     }
 
     void setEvacuees() {
