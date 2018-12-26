@@ -5,9 +5,11 @@ import java.util.*;
 class Vertex {
 
     private int id;
-    private boolean evacuees = false;
-    private boolean flood = false;
+
+    private State evacuees = State.UNKNOWN;
+    private State flood = State.UNKNOWN;
     private Probability floodProb;
+
     private HashMap<Integer, Edge> edges;
 
     Vertex(int id) {
@@ -29,20 +31,20 @@ class Vertex {
         this.floodProb = new Probability(floodProb);
     }
 
-    void setEvacuees() {
-        this.evacuees = true;
+    void setEvacuees(State evacuees) {
+        this.evacuees = evacuees;
 
     }
 
-    boolean isFlood() {
+    State getFlood() {
         return flood;
     }
 
-    void setFlood() {
-        this.flood = true;
+    void setFlood(State flood) {
+        this.flood = flood;
     }
 
-    boolean getEvacuees() {
+    State getEvacuees() {
         return evacuees;
     }
 

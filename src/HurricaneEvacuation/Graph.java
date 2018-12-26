@@ -74,7 +74,7 @@ class Graph {
         sc.skip(ignoreNonDigitsRegex);
         int weight = sc.nextInt();
 
-        edges.put(edgeNum,new Edge(vertices.get(in), vertices.get(out),weight));
+        edges.put(edgeNum,new Edge(edgeNum, vertices.get(in), vertices.get(out),weight));
     }
 
     private void readNumOfVertices(){
@@ -95,7 +95,7 @@ class Graph {
         }
     }
 
-    void displayGraphState(){
+    /*void displayGraphState(){
 
         for (Vertex v: vertices.values()) {
 
@@ -111,7 +111,7 @@ class Graph {
 
                 System.out.printf("%d", neighbourId);
 
-                if (v.getEdges().get(neighbourId).isBlocked()) {
+                if (v.getEdges().get(neighbourId).getBlocked()) {
                     System.out.print(" - blocked");
                 }
                 if (neighboursIterator.hasNext())
@@ -121,7 +121,7 @@ class Graph {
             System.out.println("}\n");
 
         }
-    }
+    }*/
 
     int getNumberOfVertices(){
 
@@ -137,9 +137,15 @@ class Graph {
         return vertices;
     }
 
+    HashMap<Integer, Edge> getEdges() {
+        return edges;
+    }
+
     Vertex getVertex(int index){
         return vertices.get(index);
     }
+
+
 
     Edge getEdge(int index){
         return edges.get(index);

@@ -8,7 +8,7 @@ public class Simulator {
     private static Graph graph;
 
     private static Scanner sc = new Scanner(System.in);
-
+    private static Evidence evidence = new Evidence();
 
     public static void main(String[] args) {
 
@@ -19,11 +19,34 @@ public class Simulator {
         readEvacuees();
         readBlockages();
 
-        getGraph().displayGraphState();
-        System.out.println();
-
+        constructBayesianNetwork();
 
         sc.close();
+
+
+    }
+
+    private static void constructBayesianNetwork() {
+
+        ArrayList<BayesNode> nodes = new ArrayList<>();
+
+        graph.getVertices().forEach(((id, vertex) -> {
+            nodes.add(new FloodBayesNode(vertex));
+        }));
+
+        graph.getEdges().forEach((id, edge) ->{
+            nodes.add(new BlockageBayesNode(edge));
+        });
+
+        graph.getVertices().forEach((id, vertex) -> {
+            nodes.add(new EvacueesBayesNode(vertex));
+        });
+
+        for (int i = 0; i < nodes.size(); i++) {
+
+            nodes.get(i).setParents(nodes.subList(0, i));
+
+        }
 
 
     }
@@ -34,7 +57,7 @@ public class Simulator {
             *//*NoOp*//*
             System.out.println("NoOp");
             time++;
-        } else if (move.getEdge().isBlocked()) {
+        } else if (move.getEdge().getBlocked()) {
             System.out.println("traverse failed - edge blocked");
             *//*Edge is blocked*//*
             time++;
@@ -61,31 +84,41 @@ public class Simulator {
 
     private static void readFloods() {
 
-        String floodMessage = "Please enter the vertex numbers" +
-                " in which a flood is reported:";
+        String floodMessage = "Enter vertex numbers where flood is reported, or " +
+                "negative numbers where the absence of a flood is reported: ";
 
-        for (Integer vertexNum : readReports(floodMessage, graph.getNumberOfVertices())) {
-            graph.getVertex(vertexNum).setFlood();
+        for (Integer number : readReports(floodMessage, graph.getNumberOfVertices())) {
+            Vertex vertex = graph.getVertex(Math.abs(number));
+            State state = number > 0 ? State.TRUE : State.FALSE;
+            vertex.setFlood(state);
+            evidence.submitFlood(vertex);
         }
     }
 
-    private static void readEvacuees(){
+    private static void readEvacuees() {
 
-        String evacueesMessage = "Please enter the vertex numbers" +
-                " in which there are evacuees:";
+        String evacueesMessage = "Enter vertex numbers where the " +
+                "presence of evacuees is reported, or " +
+                "negative numbers where the absence of them is reported: ";
 
-        for (Integer vertexNum : readReports(evacueesMessage, graph.getNumberOfVertices())) {
-            graph.getVertex(vertexNum).setEvacuees();
+        for (Integer number : readReports(evacueesMessage, graph.getNumberOfVertices())) {
+            Vertex vertex = graph.getVertex(Math.abs(number));
+            State state = number > 0 ? State.TRUE : State.FALSE;
+            vertex.setEvacuees(state);
+            evidence.submitEvacuees(vertex);
         }
     }
 
-    private static void readBlockages(){
+    private static void readBlockages() {
 
-        String blockageMessage = "Please enter the edge numbers" +
-                " which are blocked:";
+        String blockageMessage = "Enter edge numbers where a blockage is reported, or " +
+                "negative numbers where the absence of a blockage is reported: ";
 
-        for (Integer edgeNum : readReports(blockageMessage, graph.getNumberOfEdges())) {
-            graph.getEdge(edgeNum).setBlocked();
+        for (Integer number : readReports(blockageMessage, graph.getNumberOfEdges())) {
+            Edge edge = graph.getEdge(Math.abs(number));
+            State state = number > 0 ? State.TRUE : State.FALSE;
+            edge.setBlocked(state);
+            evidence.submitBlockage(edge);
         }
 
     }
@@ -103,19 +136,18 @@ public class Simulator {
 
                 result = new ArrayList<>();
 
-                for (String numberString: numbersStrings){
+                for (String numberString : numbersStrings) {
                     int number = Integer.parseInt(numberString);
-                    if(number < 1 || number > upperBound){
+                    if (Math.abs(number) > upperBound) {
                         throw new RuntimeException("Invalid vertex number:" + number);
-                    }
-                    else{
+                    } else {
                         result.add(number);
                     }
                 }
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. try again.");
-            } catch (RuntimeException e){
+            } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
             }
         }
