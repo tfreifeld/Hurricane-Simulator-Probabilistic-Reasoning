@@ -19,7 +19,7 @@ class Vertex {
 
     void submitEdge(Edge edge) {
 
-        this.edges.put(edge.getNeighbour(this).getId(), edge);
+        this.edges.put(edge.getId(), edge);
 
     }
 

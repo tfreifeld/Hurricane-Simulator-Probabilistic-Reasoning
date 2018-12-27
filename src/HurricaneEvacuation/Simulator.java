@@ -9,6 +9,8 @@ public class Simulator {
 
     private static Scanner sc = new Scanner(System.in);
     private static Evidence evidence = new Evidence();
+    private static BayesNetwork bayesNetwork = new BayesNetwork();
+
 
     public static void main(String[] args) {
 
@@ -19,68 +21,12 @@ public class Simulator {
         readEvacuees();
         readBlockages();
 
-        constructBayesianNetwork();
+        bayesNetwork.construct();
 
         sc.close();
 
 
     }
-
-    private static void constructBayesianNetwork() {
-
-        ArrayList<BayesNode> nodes = new ArrayList<>();
-
-        graph.getVertices().forEach(((id, vertex) -> {
-            nodes.add(new FloodBayesNode(vertex));
-        }));
-
-        graph.getEdges().forEach((id, edge) ->{
-            nodes.add(new BlockageBayesNode(edge));
-        });
-
-        graph.getVertices().forEach((id, vertex) -> {
-            nodes.add(new EvacueesBayesNode(vertex));
-        });
-
-        for (int i = 0; i < nodes.size(); i++) {
-
-            nodes.get(i).setParents(nodes.subList(0, i));
-
-        }
-
-
-    }
-/*
-    private static void makeMove(Move move) {
-
-        if (move.getEdge() == null) {
-            *//*NoOp*//*
-            System.out.println("NoOp");
-            time++;
-        } else if (move.getEdge().getBlocked()) {
-            System.out.println("traverse failed - edge blocked");
-            *//*Edge is blocked*//*
-            time++;
-        } else {
-            double tempTime =
-                    time + computeTraverseTime(move.getAgent().getCarrying(), move.getEdge().getWeight());
-            if (!(tempTime > getDeadline())) {
-                *//*If deadline isn't breached*//*
-                System.out.println("traverse - " + move.getAgent().getLocation().getId()
-                        + " to " + move.getTarget().getId());
-                move.getAgent().traverse(move.getTarget());
-                time = tempTime;
-
-            } else {
-                System.out.println("traverse failed - will breach deadline");
-                *//*If deadline is breached, traverse fails*//*
-                time++;
-            }
-        }
-
-        move.getAgent().increaseMoves();
-
-    }*/
 
     private static void readFloods() {
 
@@ -178,7 +124,7 @@ public class Simulator {
 
     }*/
 
-    private static Graph getGraph() {
+    static Graph getGraph() {
         return graph;
     }
 
