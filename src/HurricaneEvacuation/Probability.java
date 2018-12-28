@@ -2,9 +2,9 @@ package HurricaneEvacuation;
 
 class Probability {
 
-    private float probability;
+    private double probability;
 
-    Probability(float probability) {
+    Probability(double probability) {
 
         if (probability < 0 || probability > 1) {
             throw new NotAProbability(probability);
@@ -12,13 +12,13 @@ class Probability {
         this.probability = probability;
     }
 
-    float getProbability() {
+    double getProbability() {
         return probability;
     }
 
     class NotAProbability extends RuntimeException{
 
-        NotAProbability(float probability) {
+        NotAProbability(double probability) {
             super("Not a probability:" + probability);
         }
     }

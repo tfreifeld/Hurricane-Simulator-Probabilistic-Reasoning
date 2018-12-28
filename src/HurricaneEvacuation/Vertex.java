@@ -15,6 +15,7 @@ class Vertex {
     Vertex(int id) {
         this.id = id;
         this.edges = new HashMap<>();
+        this.floodProb = new Probability(0);
     }
 
     void submitEdge(Edge edge) {
@@ -23,8 +24,8 @@ class Vertex {
 
     }
 
-    public float getFloodProb() {
-        return floodProb.getProbability();
+    Probability getFloodProb() {
+        return floodProb;
     }
 
     void setFloodProb(float floodProb) {
